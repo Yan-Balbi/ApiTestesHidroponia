@@ -1,6 +1,6 @@
 //Criação de conexão com o BD
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('testes_hidroponia_bd'/*nome do BD*/, 'teste_hidroponia_db'/*nome da conexão*/, 'ps00seiquenaoda00'/*senha*/, {
+const sequelize = new Sequelize('testes_hidroponia_bd'/*nome do BD*/, 'teste_hidroponia_db'/*username*/, 'ps00seiquenaoda00'/*senha*/, {
     host: 'localhost',
     dialect: 'mysql'
 });
