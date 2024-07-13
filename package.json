@@ -1,0 +1,17 @@
+{
+  "name": "ApiTesteComponentesHidroponia",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.10.1",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "scripts": {
+    "runapi": "nodemon src/server.js"
+  }
+}
