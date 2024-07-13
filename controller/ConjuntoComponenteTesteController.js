@@ -1,7 +1,6 @@
 const ConjuntoTesteComponenteModel = require('../models/ConjuntoComponenteTesteModel');
 
 function getAllTests(request, response){
-    //TODO: implementar
     response.send(posts);
 }
 
