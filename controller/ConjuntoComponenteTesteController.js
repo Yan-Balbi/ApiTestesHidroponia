@@ -13,8 +13,18 @@ async function insertTest(request, response){
         response.status(400).json({error: error.message});
     }
 }
+async function getConjuntoTesteByNome(request){
+    try{
+        const nomeConjunto = request.body.nome_conjunto_teste;
+        const conjuntoTeste = await ConjuntoTesteComponenteModel.findOne({where : {nome: nomeConjunto}});
+        return conjuntoTeste;
+    }catch(error){
+        throw (error);
+    }
+}
 
 module.exports = {
     getAllTests: getAllTests, 
-    insertTest: insertTest  
+    insertTest: insertTest,
+    getConjuntoTesteByNome: getConjuntoTesteByNome
 }

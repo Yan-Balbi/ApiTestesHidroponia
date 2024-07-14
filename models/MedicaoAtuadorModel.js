@@ -14,11 +14,18 @@ const MedicaoAtuadorModel = sequelize.define('medicao_atuador', {
     type: DataTypes.STRING,
     autoIncrement: false,
     primaryKey: false,
-    allowNull: false,
+    allowNull: true,
     unique: false
   },
   tensao: {
     type: DataTypes.STRING,
+    autoIncrement: false,
+    primaryKey: false,
+    allowNull: true,
+    unique: false
+  },
+  estado: {
+    type: DataTypes.TINYINT,
     autoIncrement: false,
     primaryKey: false,
     allowNull: false,

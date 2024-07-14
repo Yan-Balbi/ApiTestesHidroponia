@@ -22,19 +22,15 @@ async function insertRegistroDadoSemResponse(request){//Não alterar
 
 async function insertMedicaoSensor(request, response){
     try{
-        const ConjuntoComponenteTesteModel = require('../models/ConjuntoComponenteTesteModel.js');
-        //const test = await RegistroDadoComponenteModelModel.create(request.body);
-        //response.status(201).json(test);
-
         const atributo = await AtributoController.getAtributoByNomeAtributoAndSensor(request);
         
-        //Se o usuário quiser medir 2 sensores ao mesmo Tempo? O MAX ID NÃO VAI SERVIR
-        //TODO - OBTER O ID DO CONJUNTO DE TESTES PELO NOME DO CONJUNTO DE TESTES!!!
-        const maxId = await ConjuntoComponenteTesteModel.max('id');
-        console.log(maxId)
-        
+        const ConjuntoComponenteTesteController = require('./ConjuntoComponenteTesteController.js');
+
+        conjuntoTeste = await ConjuntoComponenteTesteController.getConjuntoTesteByNome(request);
+        conjuntoTesteId = conjuntoTeste.id;
+
         const requestRegistroDado = {
-            conjunto_teste_componente_id: maxId
+            conjunto_teste_componente_id: conjuntoTesteId
         }
 
         const registroDado = await insertRegistroDadoSemResponse(requestRegistroDado);
@@ -56,19 +52,20 @@ async function insertMedicaoSensor(request, response){
 
 async function insertMedicaoAtuador(request, response){
     try{
-        const ConjuntoComponenteTesteModel = require('../models/ConjuntoComponenteTesteModel.js');
+        const ConjuntoComponenteTesteController = require('./ConjuntoComponenteTesteController.js');
 
         const correnteMedida = request.body.corrente_medida;
         const tensaoMedida = request.body.tensao_medida;
+        const estado = request.body.estado;
         
         const AtuadorController = require('./AtuadorController.js');
         const atuador = await AtuadorController.getAtuadorByNome(request);
 
-        const maxId = await ConjuntoComponenteTesteModel.max('id');
-        console.log(maxId);
+        conjuntoTeste = await ConjuntoComponenteTesteController.getConjuntoTesteByNome(request);
+        conjuntoTesteId = conjuntoTeste.id;
 
         const requestRegistroDado = {
-            conjunto_teste_componente_id: maxId
+            conjunto_teste_componente_id: conjuntoTesteId
         }
 
         const registroDado = await insertRegistroDadoSemResponse(requestRegistroDado);
@@ -76,6 +73,7 @@ async function insertMedicaoAtuador(request, response){
         requestAtualizada = {
             corrente: correnteMedida,
             tensao: tensaoMedida,
+            estado: estado,
             atuador_id: atuador.id,
             registro_dado_componente_id: registroDado.id
         }
