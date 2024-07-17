@@ -4,6 +4,7 @@
   "main": "server.js",
   "license": "MIT",
   "dependencies": {
+    "chart.js": "^4.4.3",
     "express": "^4.19.2",
     "mysql2": "^3.10.1",
     "sequelize": "^6.37.3"

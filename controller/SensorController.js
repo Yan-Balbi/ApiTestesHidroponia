@@ -1,4 +1,6 @@
+const { request } = require('express');
 const SensorModel = require('../models/SensorModel');
+const AtributoModel = require('../models/AtributoModel');
 
 
 //TODO: antes de fazer o insert, verificar se o nome já existe, 
@@ -35,6 +37,39 @@ async function getSensorByNome(request){
     } 
 }
 
+async function existeSensorEAtributos(request){
+    if((await existeSensor(request) == null) && (await existeAtributos(request) == false)){
+        return false;
+    }
+    return true;
+}
+
+async function existeSensor(request){
+    try{
+        const nomeSensor = request.body.nome;
+        const sensor = await SensorModel.findOne({where: {nome: nomeSensor}});
+        return sensor;
+    } catch (error){
+        throw (error);
+    }
+}
+
+async function existeAtributos(request){
+    const AtributoModel = require('../models/AtributoModel');
+    try{
+        const nomesAtributos = request.body.atributos.map(atributo => atributo.nome);
+        console.log(nomesAtributos);
+        for(const nome of nomesAtributos){
+            if(await AtributoModel.findOne({where: {nome: nome}})){
+                return true;
+            }
+        }
+        return false;
+    } catch (error){
+        throw (error);
+    }
+}
+
 /*async function insertSensorComAtributos(request, response){
     try{
         const { nome, atributos} = request.body;
@@ -59,18 +94,22 @@ async function getSensorByNome(request){
     //o response não pode aparecer mais de 2 vezes
    async function insertSensorComAtributos(request, response){
     try{
-        const atributoController = require('../controller/AtributoController');
-        const { nome, atributos} = request.body;
-        //const sensor = await SensorModel.create({ nome });
-        const sensor = await insertSemResponse({nome});
-        const sensorId = sensor.id;
+        if(await existeSensorEAtributos(request) == false){
+            const atributoController = require('../controller/AtributoController');
+            const { nome, atributos} = request.body;
+            //const sensor = await SensorModel.create({ nome });
+            const sensor = await insertSemResponse({nome});
+            const sensorId = sensor.id;
 
-        const atributosWithSensorId = atributos.map(atributo => ({...atributo, sensor_id: sensorId }));
+            const atributosWithSensorId = atributos.map(atributo => ({...atributo, sensor_id: sensorId }));
 
-        const atributosRequest = {body: atributosWithSensorId};
-        //await atributoController.insert(atributosRequest, response);
-        await atributoController.insertSemResponse(atributosRequest);
-        response.status(201).json("Sensor e Atributos inseridos com sucesso!");
+            const atributosRequest = {body: atributosWithSensorId};
+            //await atributoController.insert(atributosRequest, response);
+            await atributoController.insertSemResponse(atributosRequest);
+            response.status(201).json("Sensor e Atributos inseridos com sucesso!");
+        } else {
+            response.status(409).json({conflict: "Cadastro de sensor e atributos cancelado: há dados já inseridos no BD. "});
+        }
     } catch (error){
         response.status(400).json({error: error.message});
     }
